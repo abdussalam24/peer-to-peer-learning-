@@ -6,10 +6,12 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         navigate('/login');
     };
 
@@ -41,12 +43,25 @@ const Navbar = () => {
                             <NavLink to="/leaderboard">Leaderboard</NavLink>
                             <NavLink to="/chat">Chat</NavLink>
                             <div className="h-6 w-px bg-slate-200"></div>
+
+                            <div className="flex items-center gap-3 px-3 py-1 bg-slate-50 rounded-full border border-slate-100">
+                                <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-sm">
+                                    {user?.name?.charAt(0)}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-slate-900 leading-tight">{user?.name}</span>
+                                    <span className={`text-[10px] font-bold uppercase tracking-wider leading-tight ${user?.role === 'mentor' ? 'text-accent-600' : 'text-primary-600'}`}>
+                                        {user?.role}
+                                    </span>
+                                </div>
+                            </div>
+
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center gap-2 text-slate-600 hover:text-red-600 font-medium transition-colors"
+                                className="flex items-center gap-2 text-slate-500 hover:text-red-600 transition-colors ml-2"
+                                title="Logout"
                             >
-                                <LogOut className="w-4 h-4" />
-                                Logout
+                                <LogOut className="w-5 h-5" />
                             </button>
                         </>
                     ) : (

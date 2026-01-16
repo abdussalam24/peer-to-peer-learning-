@@ -4,21 +4,40 @@ const MentorProfile = require('../models/MentorProfile');
 exports.findMentors = async (req, res) => {
     try {
         const { skill, day } = req.query;
-        let query = { isApproved: true }; // Only show approved mentors
 
-        if (skill) {
-            query.skills = { $regex: skill, $options: 'i' }; // Case-insensitive partial match
-        }
+        // Base query: only show approved mentors
+        // UNLESS it's the current user's own profile (so they can see themselves)
+        let query = {
+            $or: [
+                { isApproved: true },
+            ]
+        };
 
-        if (day) {
-            query['availability.day'] = { $regex: day, $options: 'i' };
+        if (req.user && req.user.id) {
+            query.$or.push({ user: req.user.id });
         }
 
         const mentors = await MentorProfile.find(query)
             .populate('user', ['name', 'avatar'])
-            .sort({ rating: -1 }); // Sort by highest rating
+            .sort({ rating: -1 });
 
-        res.json(mentors);
+        // Filter by skill if provided
+        let filteredMentors = mentors;
+        if (skill) {
+            const regex = new RegExp(skill, 'i');
+            filteredMentors = mentors.filter(m =>
+                m.skills.some(s => regex.test(s))
+            );
+        }
+
+        if (day) {
+            const regex = new RegExp(day, 'i');
+            filteredMentors = filteredMentors.filter(m =>
+                m.availability.some(a => regex.test(a.day))
+            );
+        }
+
+        res.json(filteredMentors);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
