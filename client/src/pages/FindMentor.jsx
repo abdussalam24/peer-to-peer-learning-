@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../config';
+
 
 const FindMentor = () => {
     const [mentors, setMentors] = useState([]);
@@ -12,9 +14,10 @@ const FindMentor = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/matching/find?skill=${skill}&gender=${gender}`, {
+            const res = await axios.get(`${API_URL}/api/matching/find?skill=${skill}&gender=${gender}`, {
                 headers: token ? { 'x-auth-token': token } : {}
             });
+
             setMentors(res.data);
         } catch (err) {
             console.error(err);
@@ -64,9 +67,10 @@ const FindMentor = () => {
                             // Auto trigger search on change
                             const newGender = e.target.value;
                             const token = localStorage.getItem('token');
-                            axios.get(`http://localhost:5000/api/matching/find?skill=${skill}&gender=${newGender}`, {
+                            axios.get(`${API_URL}/api/matching/find?skill=${skill}&gender=${newGender}`, {
                                 headers: token ? { 'x-auth-token': token } : {}
                             }).then(res => setMentors(res.data));
+
                         }}
                         className="bg-transparent focus:outline-none text-slate-700 font-bold"
                     >

@@ -3,8 +3,11 @@ import io from 'socket.io-client';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Send, User, Clock, ArrowLeft, MessageSquare } from 'lucide-react';
+import { API_URL } from '../config';
 
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect(API_URL);
+
+
 
 const Chat = () => {
     const [searchParams] = useSearchParams();
@@ -74,7 +77,8 @@ const Chat = () => {
         try {
             console.log('Fetching history for room:', roomName);
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/chat/history/${roomName}`, {
+            const res = await axios.get(`${API_URL}/api/chat/history/${roomName}`, {
+
                 headers: { 'x-auth-token': token }
             });
 

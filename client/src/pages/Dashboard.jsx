@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Calendar, CheckCircle, Clock, Award, User, BookOpen, MessageSquare, LogOut, Search, Trophy, Video, Gift, Lock, X, CreditCard, DollarSign } from 'lucide-react';
 import MeetingCard from '../components/MeetingCard';
+import { API_URL } from '../config';
+
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -35,22 +37,25 @@ const Dashboard = () => {
                 }
 
                 // Fetch user profile
-                const profileRes = await axios.get('http://localhost:5000/api/profile/me', {
+                const profileRes = await axios.get(`${API_URL}/api/profile/me`, {
                     headers: { 'x-auth-token': token }
                 });
+
                 setUser(profileRes.data.user);
                 setProfile(profileRes.data.profile);
 
                 // Fetch sessions
-                const sessionsRes = await axios.get('http://localhost:5000/api/sessions', {
+                const sessionsRes = await axios.get(`${API_URL}/api/sessions`, {
                     headers: { 'x-auth-token': token }
                 });
+
                 setSessions(sessionsRes.data);
 
                 // Fetch meetings
-                const meetingsRes = await axios.get('http://localhost:5000/api/meetings', {
+                const meetingsRes = await axios.get(`${API_URL}/api/meetings`, {
                     headers: { 'x-auth-token': token }
                 });
+
                 setMeetings(meetingsRes.data.meetings || []);
 
             } catch (err) {
@@ -93,9 +98,10 @@ const Dashboard = () => {
     const handleRedeem = async (rewardType) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/gamification/redeem', { rewardType }, {
+            const res = await axios.post(`${API_URL}/api/gamification/redeem`, { rewardType }, {
                 headers: { 'x-auth-token': token }
             });
+
 
             if (res.data.success) {
                 setProfile(res.data.profile);
@@ -111,13 +117,14 @@ const Dashboard = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/profile/withdraw', {
+            const res = await axios.post(`${API_URL}/api/profile/withdraw`, {
                 amount: parseFloat(withdrawAmount),
                 method: withdrawMethod,
                 details: withdrawDetails
             }, {
                 headers: { 'x-auth-token': token }
             });
+
 
             if (res.data.success) {
                 setProfile(res.data.profile);

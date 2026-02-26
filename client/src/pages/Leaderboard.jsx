@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
+
 
 const Leaderboard = () => {
     const [mentors, setMentors] = useState([]);
@@ -8,8 +10,9 @@ const Leaderboard = () => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/gamification/leaderboard');
+                const res = await axios.get(`${API_URL}/api/gamification/leaderboard`);
                 setMentors(res.data);
+
             } catch (err) {
                 console.error(err);
             } finally {
@@ -65,9 +68,9 @@ const Leaderboard = () => {
                                     </td>
                                     <td className="py-4 px-6">
                                         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${mentor.level === 'Gold' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
-                                                mentor.level === 'Silver' ? 'bg-slate-200 text-slate-800 border border-slate-300' :
-                                                    mentor.level === 'Bronze' ? 'bg-orange-100 text-orange-800 border border-orange-200' :
-                                                        'bg-slate-50 text-slate-400 border border-slate-100'
+                                            mentor.level === 'Silver' ? 'bg-slate-200 text-slate-800 border border-slate-300' :
+                                                mentor.level === 'Bronze' ? 'bg-orange-100 text-orange-800 border border-orange-200' :
+                                                    'bg-slate-50 text-slate-400 border border-slate-100'
                                             }`}>
                                             {mentor.level || 'Rookie'}
                                         </span>

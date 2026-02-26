@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { API_URL } from '../config';
+
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -18,7 +20,8 @@ const Login = () => {
     const onSubmit = async e => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', formData);
+            const res = await axios.post(`${API_URL}/api/auth/login`, formData);
+
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user)); // Store user info
             navigate('/dashboard');

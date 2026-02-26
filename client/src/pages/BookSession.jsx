@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Calendar, Clock, Video, CheckCircle, X, ArrowLeft } from 'lucide-react';
+import { API_URL } from '../config';
+
 
 const BookSession = () => {
     const { mentorId } = useParams();
@@ -30,9 +32,10 @@ const BookSession = () => {
     const fetchMentorDetails = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/matching/mentors/${mentorId}`, {
+            const res = await axios.get(`${API_URL}/api/matching/mentors/${mentorId}`, {
                 headers: { 'x-auth-token': token }
             });
+
             setMentor(res.data);
             setLoading(false);
         } catch (err) {
@@ -73,10 +76,11 @@ const BookSession = () => {
             };
 
             const res = await axios.post(
-                'http://localhost:5000/api/meetings/create',
+                `${API_URL}/api/meetings/create`,
                 meetingData,
                 { headers: { 'x-auth-token': token } }
             );
+
 
             setCreatedMeeting(res.data.meeting);
             setShowSuccess(true);
